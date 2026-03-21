@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&display=swap');
+
+  body-equiv {display:block}
+
+  .scene {
+    width: 100%;
+    height: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #09090a;
+    perspective: 900px;
+    perspective-origin: 50% 50%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ambient glow behind */
+  .scene::before {
+    content: '';
+    position: absolute;
+    width: 340px; height: 340px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(201,168,76,.18) 0%, transparent 70%);
+    animation: pulse 5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes pulse {
+    0%,100% { transform: scale(1); opacity: .7; }
+    50%      { transform: scale(1.18); opacity: 1; }
+  }
+
+  .v-3d-wrap {
+    position: relative;
+    transform-style: preserve-3d;
+    animation: lazySusan 3.8s linear infinite;
+  }
+  @keyframes lazySusan {
+    from { transform: rotateY(0deg); }
+    to   { transform: rotateY(360deg); }
+  }
+
+  /* Stack of V layers to create depth/thickness */
+  .v-layer {
+    position: absolute;
+    top: 0; left: 0;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 320px;
+    line-height: 1;
+    letter-spacing: -.02em;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  /* Front face - bright gold */
+  .v-front {
+    position: relative;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 320px;
+    line-height: 1;
+    letter-spacing: -.02em;
+    user-select: none;
+    color: #c9a84c;
+    text-shadow:
+      0 0 18px rgba(201,168,76,.95),
+      0 0 50px rgba(201,168,76,.55),
+      0 0 110px rgba(201,168,76,.25);
+    transform: translateZ(18px);
+  }
+
+  /* Depth slices — stacked translateZ layers for thickness */
+  .v-layer.d1  { color: #b8922e; text-shadow: none; transform: translateZ(15px); }
+  .v-layer.d2  { color: #a07a20; text-shadow: none; transform: translateZ(12px); }
+  .v-layer.d3  { color: #8a6418; text-shadow: none; transform: translateZ(9px);  }
+  .v-layer.d4  { color: #745210; text-shadow: none; transform: translateZ(6px);  }
+  .v-layer.d5  { color: #5e4008; text-shadow: none; transform: translateZ(3px);  }
+  .v-layer.d6  { color: #3a2604; text-shadow: none; transform: translateZ(0px);  }
+  /* back face */
+  .v-layer.back {
+    color: #2a1a02;
+    text-shadow: none;
+    transform: translateZ(-18px) rotateY(180deg);
+  }
+
+  .glow-floor {
+    position: absolute;
+    bottom: -20px;
+    left: 50%; transform: translateX(-50%);
+    width: 180px; height: 24px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(201,168,76,.28) 0%, transparent 70%);
+    filter: blur(6px);
+    animation: floorPulse 3.8s linear infinite;
+  }
+  @keyframes floorPulse {
+    0%,100% { opacity: .6; transform: translateX(-50%) scaleX(1); }
+    50%      { opacity: 1;  transform: translateX(-50%) scaleX(1.1); }
+  }
+</style>
+
+<div class="scene">
+  <div style="position:relative">
+    <div class="v-3d-wrap">
+      <span class="v-layer back">V</span>
+      <span class="v-layer d6">V</span>
+      <span class="v-layer d5">V</span>
+      <span class="v-layer d4">V</span>
+      <span class="v-layer d3">V</span>
+      <span class="v-layer d2">V</span>
+      <span class="v-layer d1">V</span>
+      <span class="v-front">V</span>
+    </div>
+    <div class="glow-floor"></div>
+  </div>
+</div>
